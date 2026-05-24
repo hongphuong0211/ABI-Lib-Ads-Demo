@@ -1,0 +1,28 @@
+{
+    "name": "GoogleMobileAds.BannerRefresh.EditmodeTests",
+    "rootNamespace": "",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "GoogleMobleAds.BannerRefresh"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "GoogleMobileAds.dll",
+        "GoogleMobileAds.Core.dll",
+        "GoogleMobileAds.Common.dll",
+        "GoogleMobileAds.Unity.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

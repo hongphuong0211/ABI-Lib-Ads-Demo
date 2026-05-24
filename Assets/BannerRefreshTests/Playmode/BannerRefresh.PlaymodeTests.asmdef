@@ -1,0 +1,25 @@
+{
+    "name": "GoogleMobileAds.BannerRefresh.PlaymodeTests",
+    "rootNamespace": "",
+    "references": [
+        "GUID:47a2b5ae5e5ac4aff9b0077374c33b25",
+        "GUID:27619889b8ba8c24980f49ee34dbb44a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "GoogleMobileAds.dll",
+        "GoogleMobileAds.Common.dll",
+        "GoogleMobileAds.Core.dll",
+        "GoogleMobileAds.Unity.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

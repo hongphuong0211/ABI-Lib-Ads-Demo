@@ -3,7 +3,8 @@
     "rootNamespace": "ABILibsSDK",
     "references": [
         "AppsFlyer",
-        "MaxSdk.Scripts"
+        "MaxSdk.Scripts",
+        "ABI.Ads.UnityBridge"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
