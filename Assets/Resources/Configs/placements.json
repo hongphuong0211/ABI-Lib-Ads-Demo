@@ -5,7 +5,7 @@
             "ads_type": "banner",
             "ad_ids": [
                 {
-                    "ad_id": "",
+                    "ad_id": "ca-app-pub-3940256099942544/6300978111",
                     "ads_weight": 1,
                     "mediation": 0
                 }
@@ -61,7 +61,7 @@
             "ads_type": "interstitial",
             "ad_ids": [
                 {
-                    "ad_id": "",
+                    "ad_id": "ca-app-pub-3940256099942544/1033173712",
                     "ads_weight": 1,
                     "mediation": 0
                 }
@@ -117,7 +117,7 @@
             "ads_type": "rewarded",
             "ad_ids": [
                 {
-                    "ad_id": "",
+                    "ad_id": "ca-app-pub-3940256099942544/5224354917",
                     "ads_weight": 1,
                     "mediation": 0
                 }
@@ -173,7 +173,7 @@
             "ads_type": "app_open",
             "ad_ids": [
                 {
-                    "ad_id": "",
+                    "ad_id": "ca-app-pub-3940256099942544/9257395921",
                     "ads_weight": 1,
                     "mediation": 0
                 }
@@ -229,7 +229,7 @@
             "ads_type": "native",
             "ad_ids": [
                 {
-                    "ad_id": "",
+                    "ad_id": "ca-app-pub-3940256099942544/1044960115",
                     "ads_weight": 1,
                     "mediation": 0
                 }
@@ -269,12 +269,12 @@
                 "border_color": "",
                 "corner_radius_dp": 0.0,
                 "stroke_width_dp": 1,
-                "headline_text_color": "",
-                "body_text_color": "",
-                "price_text_color": "",
-                "advertiser_text_color": "",
+                "headline_text_color": "#000000",
+                "body_text_color": "#000000",
+                "price_text_color": "#736F6F",
+                "advertiser_text_color": "#655555",
                 "clicked": {
-                    "btn_act_color": "",
+                    "btn_act_color": "#08A8FF",
                     "btn_act_text_color": "",
                     "delay_time_show_btn_next": 0
                 }

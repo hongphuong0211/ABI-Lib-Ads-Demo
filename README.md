@@ -1,203 +1,325 @@
-## ABILibs SDK cho Unity
+# ABI Lib Ads Demo
 
-ABILibs SDK là một bộ wrapper/tiện ích cho Unity giúp bạn:
+Project Unity mẫu minh họa cách tích hợp **[ABI Ads Unity Bridge](https://github.com/hongphuong0211/ABI-Lib-Ads-Support)** (`com.abi.ads.unity`) vào game thực tế.
 
-- **Tích hợp nhanh quảng cáo với AppLovin MAX Mediation**
-- **Theo dõi doanh thu quảng cáo với Firebase Analytics & AppsFlyer**
-- **Tự động gửi các custom event nâng cao (TROAS, Bamboo, v.v.)** để tối ưu UA/monetization
-
-SDK đã được đóng gói sẵn trong thư mục `Assets/ABILibsSDK`.
+| | |
+|---|---|
+| Demo repo | [ABI-Lib-Ads-Demo](https://github.com/hongphuong0211/ABI-Lib-Ads-Demo) |
+| Package ads | [ABI-Lib-Ads-Support](https://github.com/hongphuong0211/ABI-Lib-Ads-Support) v1.7.7 |
+| Unity | 2022.3 LTS (project hiện tại: **2022.3.62f2**) |
+| Scene demo | `Assets/ABILibsSDK/Scenes/SceneDemo.unity` |
+| Script demo | `Assets/ABILibsSDK/Scripts/DemoController.cs` |
 
 ---
 
 ## 1. Yêu cầu
 
-- **Unity**: khuyến nghị 2020.3+ (URP/Built-in đều được).
-- **Firebase**:
-  - Firebase SDK for Unity (tối thiểu Firebase Analytics).
-  - File cấu hình `google-services.json` (Android) / `GoogleService-Info.plist` (iOS) đã import đúng cách.
-- **AppsFlyer**:
-  - AppsFlyer Unity SDK.
-  - Đã cấu hình `Dev Key` và `App ID iOS` hợp lệ.
-- **AppLovin MAX Mediation**:
-  - AppLovin MAX Unity SDK.
-  - Đã cấu hình các ad network adapter cần thiết.
-- **External Dependency Manager (EDM4U)**: nên được bật để tự động xử lý dependency của Firebase/AppsFlyer/MAX.
+- **Unity 2022.3+** (khuyến nghị LTS; project này dùng 2022.3 + JDK 11 cho Android).
+- **External Dependency Manager (EDM4U)** — resolve Gradle dependency Android.
+- **Firebase Analytics** (tuỳ chọn) — Remote Config, forward revenue TROAS/Bamboo (package đã nhúng sẵn ABI-Custom-Event).
+- **AppsFlyer Unity SDK** (tuỳ chọn) — attribution trong demo.
+- **AppLovin MAX Unity SDK** (bắt buộc nếu `mediation_provider = 1` hoặc `2` Dual).
 
-> **Lưu ý**: Dự án mẫu này đã tích hợp sẵn EDM4U và một số cấu hình cơ bản cho Firebase/MAX. Khi đưa vào dự án khác, hãy chắc chắn bạn đã import đầy đủ các SDK ở trên trước khi dùng ABILibs SDK.
+> Package `com.abi.ads.unity` **đã nhúng** ABI-Custom-Event. **Không** thêm `com.abilibs.custom-events` riêng (trùng type → lỗi build).
 
 ---
 
-## 2. Cấu trúc chính của ABILibs SDK
+## 2. Cài package ads vào project
 
-- **`ABILibsSDKConfig`**: ScriptableObject chứa:
-  - MAX SDK Key.
-  - Ad Unit IDs cho Banner / Interstitial / Rewarded / App Open (Android & iOS).
-  - AppsFlyer DevKey, AppId iOS.
-  - Các setting cho retry, interval, auto load ads, App Open on resume,...
-- **`SDKInitializer`**:
-  - Quản lý vòng đời khởi tạo: MAX → Firebase → AppsFlyer (tùy theo cấu hình consent).
-  - Subcribe các event doanh thu quảng cáo và forward sang Firebase, AppsFlyer, Custom Event.
-  - Expose event `OnAllSDKsInitialized` để game có thể chờ SDK sẵn sàng rồi mới continue flow.
-- **`FirebaseManager`**, **`AppsFlyerManager`**, **`AdsManager`**:
-  - Đóng gói logic khởi tạo & log event/doanh thu tương ứng cho từng SDK.
-- **`ABILibsCustomEvent` + `ABILibsCustomEventConfig`**:
-  - Quản lý các custom event: TROAS Ad Event, TROAS Ad Event 2, Bamboo Ad Event,...
-  - Cho phép cấu hình threshold doanh thu / số lần xem quảng cáo → log custom event sang Firebase Analytics.
+### 2.1. Thêm dependency UPM
 
----
+Mở `Packages/manifest.json`, thêm:
 
-## 3. Tích hợp **FULL SDK** (Ads + Firebase + AppsFlyer + Custom Event)
+```json
+"com.abi.ads.unity": "https://github.com/hongphuong0211/ABI-Lib-Ads-Support.git#v1.7.7"
+```
 
-Trường hợp này bạn muốn dùng toàn bộ flow của ABILibs SDK: MAX Mediation, Firebase, AppsFlyer và custom event.
+Project demo này đã khai báo sẵn entry trên. Sau khi Unity resolve, package nằm tại `Packages/com.abi.ads.unity/`.
 
-### 3.1. Import thư viện
+### 2.2. Dependency khuyến nghị (project host)
 
-1. Import hoặc copy thư mục `Assets/ABILibsSDK` vào project của bạn.
-2. Đảm bảo đã import các SDK:
-   - Firebase SDK for Unity (có Firebase Analytics).
-   - AppsFlyer Unity SDK.
-   - AppLovin MAX Unity SDK + các adapter cần thiết.
-3. Chạy `Assets > External Dependency Manager > Android Resolver / iOS Resolver` nếu cần để pull đầy đủ dependency.
-
-### 3.2. Tạo config `ABILibsSDKConfig`
-
-1. Trong Unity, chọn **`Assets > Create > ABILibsSDK > ABILibsSDKConfig`** để tạo asset config.
-2. Đặt tên (ví dụ `ABILibsSDKConfig.asset`) và **đặt asset này vào một thư mục `Resources`** (ví dụ `Assets/Resources/ABILibsSDKConfig.asset`).
-3. Điền cấu hình:
-   - **MAX SDK Key**.
-   - **Ad Unit IDs Android**: Banner / Interstitial / Rewarded / App Open.
-   - **Ad Unit IDs iOS**: Banner / Interstitial / Rewarded / App Open.
-   - **AppsFlyer**: `appsFlyerDevKey`, `appsFlyerAppIdIOS`, bật/tắt `appsFlyerDebug` tùy môi trường.
-   - Tùy chỉnh thêm các tham số retry, interval, auto load ads,… phù hợp game của bạn.
-
-> Nếu không gán trực tiếp trong `SDKInitializer`, class sẽ tự load `ABILibsSDKConfig` từ `Resources/ABILibsSDKConfig`.
-
-### 3.3. Tạo config `ABILibsCustomEventConfig` (khuyến nghị)
-
-1. Chọn **`Assets > Create > ABILibsSDK > CustomEventConfig`** để tạo `ABILibsCustomEventConfig`.
-2. Đặt tên asset và cũng **đặt trong thư mục `Resources`** (ví dụ `Assets/Resources/ABILibsCustomEventConfig.asset`).
-3. Tùy chỉnh:
-   - `baseTROASPurchaeEventName`, `troasPurchaseEvents`.
-   - `baseTROASEventName`, `troasAdEvents`.
-   - `baseTROASEventName2`, `troasAdEvents2`.
-   - `baseBambooAdEventName`, `bambooCountAdEvents`.
-   - `baseBambooRewardedEventName`, `bambooCountRewardedEvents`.
-   - `minRevenueThresholdForBannerAndMrec`.
-
-SDK sẽ dùng config này khi log các event trong `ABILibsCustomEvent`.
-
-### 3.4. Thêm `SDKInitializer` vào Scene
-
-1. Tạo một `GameObject` trong **Scene khởi đầu** (ví dụ `SDKRoot`).
-2. Add component:
-   - `SDKInitializer`
-   - `FirebaseManager`
-   - `AppsFlyerManager`
-   - `AdsManager`
-   - (Nếu có sẵn prefab mẫu trong thư mục `ABILibsSDK`, bạn có thể kéo prefab đó vào scene thay cho việc add tay.)
-3. Gán reference:
-   - Trong `SDKInitializer`, nếu muốn override config mặc định, gán trực tiếp `ABILibsSDKConfig` asset vào field `config`. Nếu để trống, nó sẽ tự tìm trong `Resources`.
-4. Đảm bảo `SDKInitializer` và các Manager sử dụng `DontDestroyOnLoad` (đã cài trong code) để sống xuyên suốt app.
-
-Khi chạy game:
-
-- `SDKInitializer` sẽ:
-  - Khởi tạo MAX (và flow consent nếu `useMaxTermsAndPrivacyPolicyFlow` bật).
-  - Khởi tạo Firebase, AppsFlyer.
-  - Subscribe event doanh thu quảng cáo từ `AdsManager`.
-  - Gọi `ABILibsCustomEvent.TROASEvent(...)` khi có ad revenue.
-- Khi tất cả SDK sẵn sàng, event `OnAllSDKsInitialized` được gọi → bạn có thể lắng nghe event này để bắt đầu các flow quan trọng (home, remote config, v.v.).
+| Thành phần | Mục đích |
+|------------|----------|
+| EDM4U | Resolve `ABIAdsDependencies.xml`, mediation adapters |
+| Firebase Unity SDK | Analytics, Remote Config (demo có `FirebaseManager`) |
+| AppsFlyer Unity SDK | Attribution (demo có `AppsFlyerManager`) |
+| MAX Unity SDK | Mediation MAX / Dual |
 
 ---
 
-## 4. Chỉ tích hợp **Custom Event** (không dùng full SDK)
+## 3. Tích hợp trong project hiện tại (checklist)
 
-Trường hợp này bạn đã tự tích hợp Firebase / AppsFlyer / MAX trong project, và chỉ muốn dùng phần **custom event TROAS/Bamboo** của ABILibs.
+### Bước 1 — Cấu hình Global & Placement
 
-### 4.1. Import phần cần thiết
+1. Mở **ABI Ads → Configs → Edit Ads Config** (menu từ package).
+2. **Global Config** → lưu `Assets/Resources/Configs/global_config.json`:
+   - `mediation_provider`: `0` AdMob, `1` MAX, `2` Dual
+   - `admob_app_id`, `max_sdk_key`
+   - `variant_dev`: `true` khi dev, **`false`** khi build store
+   - `inter_ad_interval`, `skip_interval_placements`, `test_devices`
+3. **Placement Config** → lưu `Assets/Resources/Configs/placements.json`:
+   - Mỗi placement: `ad_name`, `ads_type`, `ad_ids[]` (AdMob `mediation: 0`, MAX `mediation: 1`)
 
-1. Import thư mục `Assets/ABILibsSDK` (hoặc ít nhất:
-   - `ABILibsCustomEvent.cs`
-   - `ABILibsCustomEventConfig.cs`
-   - Các file liên quan tới namespace `ABILibsSDK` mà `ABILibsCustomEvent` cần).
-2. Đảm bảo bạn đã có:
-   - Firebase Analytics (`Firebase.Analytics`).
-   - MAX SDK (`MaxSdkBase.AdInfo`).
+Project demo dùng các placement mặc định:
 
-### 4.2. Tạo `ABILibsCustomEventConfig`
+| Placement | `ads_type` | Mô tả |
+|-----------|------------|--------|
+| `main_banner` | `banner` | Banner adaptive |
+| `main_interstitial` | `interstitial` | Fullscreen giữa level |
+| `main_reward` | `rewarded` | Rewarded video |
+| `main_app_open` | `app_open` | App Open khi resume |
+| `main_native` | `native` | Native overlay |
 
-1. Tạo asset: **`Assets > Create > ABILibsSDK > CustomEventConfig`**.
-2. Đặt asset trong thư mục `Resources` với tên mặc định `ABILibsCustomEventConfig` (hoặc tương đương).
-3. Cấu hình các threshold / tên event như ở mục 3.3.
+### Bước 2 — Mediation networks (Android)
 
-### 4.3. Gọi custom event từ code của bạn
+1. **Player Settings → Publishing Settings** — bật:
+   - Custom Main Gradle Template
+   - Custom Gradle Settings Template
+   - Custom Gradle Properties Template
+2. **ABI Ads → Configs → Edit Global Config** → tick network AdMob/MAX → **Apply To XML**.
+3. **Assets → External Dependency Manager → Android Resolver → Force Resolve**.
+4. Kiểm tra `Assets/Plugins/Android/mainTemplate.gradle` vẫn có block **GMA Next-Gen** phía trên `// Android Resolver Dependencies Start`.
 
-Ở nơi bạn đã nhận callback doanh thu/quảng cáo từ MAX (banner/interstitial/rewarded/app open), gọi:
+Chi tiết Unity 2022 + JDK 11: xem [android-build-unity-2022-jdk11.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.7/docs/android-build-unity-2022-jdk11.md) trong package.
 
-- **TROAS Ad Event (kiểu 1)**:
+Project demo có thêm `Assets/ABILibsSDK/Scripts/Editor/AndroidGradleDexFixPostProcessor.cs` — patch D8 pins cho launcher Gradle (JDK 11).
+
+### Bước 3 — Android Application class
+
+Trong `AndroidManifest.xml`, đặt `android:name` của `<application>`:
+
+```xml
+android:name="com.abi.ads.modules.unity.ABIUnityAdsApplication"
+```
+
+Hoặc kế thừa `AdsMultiDexApplication` nếu app đã có Application class riêng.
+
+### Bước 4 — Bootstrap khởi tạo SDK
+
+Tạo `MonoBehaviour` (hoặc dùng `DemoController`), gán config **TextAsset** trong Inspector:
 
 ```csharp
-using ABILibsSDK;
+using ABI.Ads.UnityBridge;
+using UnityEngine;
 
-void OnAdRevenuePaid(string adUnitId, MaxSdkBase.AdInfo adInfo)
+public class AdsBootstrap : MonoBehaviour
 {
-    ABILibsCustomEvent.TROASEvent(adUnitId, adInfo);
+    [SerializeField] private TextAsset globalConfig;     // global_config.json hoặc 2.txt (encrypted)
+    [SerializeField] private TextAsset placementsConfig; // placements.json hoặc 1.txt (encrypted)
+
+    private void Awake()
+    {
+        ABIAds.OnInitialized += OnAdsInitialized;
+        ABIAds.Initialize(globalConfig, placementsConfig);
+    }
+
+    private void OnAdsInitialized(ABIAdsEvent e)
+    {
+        if (!e.ready) return;
+        PreloadAll();
+    }
+
+    private void PreloadAll()
+    {
+        ABIAds.Load("main_interstitial");
+        ABIAds.Load("main_app_open");
+        ABIAds.LoadRewarded("main_reward");
+        // Banner/Native: ShowBanner / ShowNative tự request khi show
+    }
+
+    private void OnDestroy()
+    {
+        ABIAds.OnInitialized -= OnAdsInitialized;
+    }
 }
 ```
 
-- **TROAS Ad Event 2 (reset cache sau mỗi lần đạt ngưỡng)**:
+**Demo hiện tại** (`DemoController.cs`) gọi tương tự trong `Start()` và đăng ký callback theo placement.
 
-```csharp
-using ABILibsSDK;
+Luôn đăng ký `OnInitialized` / `RegisterPlacement` **trước** `Initialize()`.
 
-void OnAdRevenuePaid(string adUnitId, MaxSdkBase.AdInfo adInfo)
-{
-    ABILibsCustomEvent.TROASEvent2(adUnitId, adInfo);
-}
-```
+### Bước 5 — Gắn scene demo (tuỳ chọn)
 
-- **Bamboo Ad Event (tính theo số lần xem quảng cáo)**:
+1. Mở `Assets/ABILibsSDK/Scenes/SceneDemo.unity`.
+2. Component `DemoController` đã gắn sẵn UI test từng format.
+3. Kéo `global_config.json` và `placements.json` vào Inspector nếu chưa gán.
 
-```csharp
-using ABILibsSDK;
+### Bước 6 — Build Android / iOS
 
-void OnInterstitialRevenuePaid(string adUnitId, MaxSdkBase.AdInfo adInfo)
-{
-    ABILibsCustomEvent.BambooAdEvent(adUnitId, adInfo);
-}
-
-void OnRewardedRevenuePaid(string adUnitId, MaxSdkBase.AdInfo adInfo)
-{
-    ABILibsCustomEvent.BambooRewardedEvent(adUnitId, adInfo);
-}
-```
-
-> **Lưu ý**:
-> - Hãy chắc chắn `ABILibsCustomEventConfig.Instance` load thành công (asset nằm trong `Resources`).
-> - Firebase Analytics phải được init trước khi gọi các hàm trên, nếu không event sẽ không được log.
+- **Android**: Custom Gradle templates + Force Resolve (mục 2).
+- **iOS**: Export → copy `Podfile.template` từ package → `pod install` → mở `.xcworkspace`.
+- Gọi `ABIAds.SetCurrentViewController()` trên iOS khi đổi scene.
 
 ---
 
-## 5. Demo Scene
+## 4. Từng ad format — setup & API
 
-Trong thư mục `Assets/ABILibsSDK` có sẵn **scene demo** với `DemoController`:
+Mapping `ads_type` trong `placements.json` → API Unity (`ABIAds`):
 
-- Hỗ trợ UI để cấu hình nhanh `ABILibsSDKConfig` trực tiếp trong runtime (MAX SDK Key, ad unit IDs, v.v.).
-- Các nút test: load/show/hide Banner, Interstitial, Rewarded, App Open, fetch Remote Config, log AppsFlyer event,...
+| `ads_type` | API chính | Preload | Show |
+|------------|-----------|---------|------|
+| `interstitial` | `Load`, `Show`, `LoadAndShow` | `Load(placement)` | `Show(placement)` |
+| `app_open` | `Load`, `Show` | Khi app pause | Khi app resume |
+| `rewarded` | `LoadRewarded`, `ShowRewarded` | `LoadRewarded(placement)` | `ShowRewarded(placement)` |
+| `banner` | `ShowBanner`, `HideBanner`, `DestroyBanner` | Không cần `Load` riêng | `ShowBanner(placement, "bottom")` |
+| `mrec` | Giống banner | — | `ShowBanner(placement, position)` |
+| `native` | `ShowNative`, `SetNativePlaceholderBounds`, `HideNative`, `DestroyNative` | **Không** `Load` + `ShowNative` | `ShowNative(...)` tự load |
 
-Bạn có thể mở scene demo này để tham khảo cách setup `SDKInitializer`, `AdsManager`, `FirebaseManager`, `AppsFlyerManager` và cách lắng nghe `OnAllSDKsInitialized`.
+### 4.1. Banner
+
+```csharp
+// ShowBanner tự request ad; không cần Load trước
+ABIAds.ShowBanner("main_banner", "bottom");
+ABIAds.HideBanner();
+ABIAds.DestroyBanner();
+```
+
+**Demo:** nút Load Banner gọi `ABIAds.Load` (tuỳ chọn preload pool); Show/Hide map trực tiếp API trên.
+
+**Callback:** `banner_requested`, `impression`, `clicked`, `revenue`, `banner_hidden`, `banner_destroyed`, `failed`, `display_failed`.
+
+### 4.2. Interstitial
+
+```csharp
+ABIAds.Load("main_interstitial");
+
+if (ABIAds.IsPlacementReady("main_interstitial"))
+    ABIAds.Show("main_interstitial");
+else
+    ABIAds.LoadAndShow("main_interstitial");
+
+// Timeout loading (ms)
+ABIAds.Show("main_interstitial", timeoutLoadingAds: 3000);
+```
+
+**Callback:** `loaded`, `failed`, `impression`, `clicked`, `closed`, `display_failed`, `revenue`.
+
+### 4.3. Rewarded
+
+```csharp
+ABIAds.RegisterPlacement("main_reward", new ABIAdsPlacementCallbacks
+{
+    OnRewardGranted = e => GrantReward(e.rewardType, e.rewardAmount),
+    OnFailed = e => Debug.Log($"Reward failed: {e.error}"),
+    OnClosed = e => ResumeGameplay()
+});
+
+ABIAds.LoadRewarded("main_reward");
+ABIAds.ShowRewarded("main_reward", timeoutLoadingAds: 3000);
+```
+
+Trao thưởng tại **`reward_granted`**. Dùng **`reward_completed`** nếu cần đợi ad đóng hẳn.
+
+**Callback:** `loaded`, `failed`, `reward_granted`, `reward_completed`, `closed`, `revenue`, …
+
+### 4.4. App Open
+
+```csharp
+void OnApplicationPause(bool paused)
+{
+    if (!ABIAds.IsReady()) return;
+
+    if (paused)
+        ABIAds.Load("main_app_open");
+    else if (ABIAds.IsPlacementReady("main_app_open"))
+        ABIAds.Show("main_app_open");
+}
+```
+
+**Callback:** giống interstitial (`loaded`, `closed`, `revenue`, …).
+
+### 4.5. Native
+
+```csharp
+// Neo vùng placeholder (tọa độ chuẩn hoá 0..1) trước khi show
+ABIAds.SetNativePlaceholderBounds(minX: 0f, minY: 0.6f, maxX: 1f, maxY: 1f);
+
+// ShowNative TỰ LOAD — không gọi Load() rồi OnLoaded → ShowNative()
+ABIAds.ShowNative(
+    placement: "main_native",
+    templateName: "ads_layout_native_language",
+    size: NativeSize.Medium,       // Small | Medium | FreeSize
+    position: NativePosition.Bottom, // Top | Center | Bottom
+    duration: 0                    // giây; < 0 ẩn nút close
+);
+
+ABIAds.ShowNativeFullScreen("main_native_full", countDownSec: 3);
+
+ABIAds.HideNative();
+ABIAds.DestroyNative();
+```
+
+**Demo:** field `nativeTemplateName` (InputField) truyền tên layout Android/iOS.
+
+**Callback:** `native_requested`, `loaded`, `impression`, `clicked`, `native_hidden`, `native_destroyed`, `revenue`, …
 
 ---
 
-## 6. Gợi ý best practices
+## 5. Callback trong project demo
 
-- **Phân tách config Prod/Staging**:
-  - Tạo nhiều `ABILibsSDKConfig` (ví dụ: `ABILibsSDKConfig_Prod`, `ABILibsSDKConfig_Staging`) và chọn asset tương ứng theo build variant.
-- **Không hard-code key trong code**, luôn dùng ScriptableObject (`ABILibsSDKConfig`, `ABILibsCustomEventConfig`).
-- **Test kỹ flow consent (GDPR/CCPA)**:
-  - Nếu bạn để `useMaxTermsAndPrivacyPolicyFlow = true`, MAX sẽ điều khiển luồng Terms & Privacy/CMP, sau đó mới tiếp tục init các SDK khác.
-  - Nếu `false`, hãy tự xử lý consent rồi gọi init ads sau khi có consent hợp lệ.
+`DemoController` đăng ký callback toàn cục và theo placement:
 
-Nếu bạn cần thêm hướng dẫn chi tiết cho dự án cụ thể, hãy mở issue hoặc cập nhật phần này cho phù hợp workflow nội bộ.
+```csharp
+ABIAds.EventReceived += OnABIAdsEvent;
+ABIAds.OnInitialized += OnABIAdsInitialized;
 
+var cb = ABIAds.RegisterPlacement("main_interstitial");
+cb.OnLoaded = e => Log($"{e.placement} loaded");
+cb.OnRevenue = e => Log($"revenue={e.revenue} {e.currency}");
+// OnFailed, OnClosed, OnRewardGranted, ...
+```
+
+Event global: `bridge_ready`, `initialized`, `view_controller_updated` (iOS), `config_applied`.
+
+Hằng số: `ABIAdsEventNames.Loaded`, `ABIAdsEventNames.RewardGranted`, …
+
+---
+
+## 6. Cấu trúc thư mục project demo
+
+```
+Assets/
+├── ABILibsSDK/
+│   ├── Scenes/SceneDemo.unity      # Scene test UI
+│   └── Scripts/
+│       ├── DemoController.cs       # Demo ABI Ads API
+│       ├── SDKInitializer.cs       # Firebase / AppsFlyer / MAX (legacy wrapper)
+│       ├── FirebaseManager.cs
+│       ├── AppsFlyerManager.cs
+│       └── Editor/
+│           └── AndroidGradleDexFixPostProcessor.cs
+├── Resources/Configs/
+│   ├── global_config.json
+│   └── placements.json
+└── Plugins/Android/
+    ├── mainTemplate.gradle
+    └── gradleTemplate.properties
+Packages/
+└── com.abi.ads.unity/              # ABI Ads Unity Bridge (UPM git)
+```
+
+---
+
+## 7. Clone & chạy demo
+
+```bash
+git clone https://github.com/hongphuong0211/ABI-Lib-Ads-Demo.git
+```
+
+1. Mở project bằng **Unity 2022.3 LTS**.
+2. Đợi Unity import package `com.abi.ads.unity` từ git.
+3. Chạy **Android Resolver → Force Resolve** (lần đầu).
+4. Mở `SceneDemo`, Play Mode — test từng nút ads trên UI.
+5. Thay ad unit test bằng ID thật trong **ABI Ads → Configs** trước khi build store.
+
+---
+
+## 8. Tài liệu package đầy đủ
+
+- README package: [ABI-Lib-Ads-Support README](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.7/README.md)
+- Android Unity 6: [android-build-notes.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.7/docs/android-build-notes.md)
+- Android Unity 2022 + JDK 11: [android-build-unity-2022-jdk11.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.7/docs/android-build-unity-2022-jdk11.md)
+
+---
+
+*Cập nhật: 2026-05-27 — demo tích hợp `com.abi.ads.unity` v1.7.7, hướng dẫn từng ad format theo `DemoController`.*

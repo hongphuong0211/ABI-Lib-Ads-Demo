@@ -6,6 +6,9 @@ namespace ABILibsSDK
 {
     public class DemoController : MonoBehaviour
     {
+        [Header("ABI Ads Configuration")]
+        [SerializeField] private TextAsset globalConfig;
+        [SerializeField] private TextAsset placementConfig;
         [Header("ABI Ads Placements")]
         [SerializeField] private string bannerPlacement = "main_banner";
         [SerializeField] private string interstitialPlacement = "main_interstitial";
@@ -34,7 +37,8 @@ namespace ABILibsSDK
         {
             SetupButtons();
             SetupABIAdsCallbacks();
-            ABIAds.Initialize();
+            ABIAds.Initialize(globalConfig != null ? globalConfig.text : Resources.Load<TextAsset>("Configs/global_config.json").text, 
+            placementConfig != null ? placementConfig.text : Resources.Load<TextAsset>("Configs/placements.json").text);
 
             if (SDKInitializer.Instance != null)
             {
