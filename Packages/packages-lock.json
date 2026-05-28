@@ -1,11 +1,11 @@
 {
   "dependencies": {
     "com.abi.ads.unity": {
-      "version": "https://github.com/hongphuong0211/ABI-Lib-Ads-Support.git#v1.7.9",
+      "version": "https://github.com/hongphuong0211/ABI-Lib-Ads-Support.git#v1.7.11",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "2dece4aad3e15ff745d01a3f2ccd9ec721255e3d"
+      "hash": "7343c770bf6323ef291ab9d5e2dcdb6a5c93b2db"
     },
     "com.unity.collab-proxy": {
       "version": "2.11.4",

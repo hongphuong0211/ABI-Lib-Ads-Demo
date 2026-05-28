@@ -2,14 +2,8 @@ apply plugin: 'com.android.library'
 apply from: '../shared/keepUnitySymbols.gradle'
 **APPLY_PLUGINS**
 
-// ABI Ads: GMA Next-Gen — giữ phía trên block EDM (com.abi.ads.unity/docs/android-build-unity-6.md)
+// ABI Ads: GMA classic — giữ phía trên block EDM (com.abi.ads.unity/docs/android-build-unity-6.md)
 configurations.configureEach {
-    exclude group: 'com.google.android.gms', module: 'play-services-ads'
-    exclude group: 'com.google.android.gms', module: 'play-services-ads-lite'
-    exclude group: 'com.google.android.gms', module: 'play-services-ads-api'
-    // MAX Google adapters require legacy MobileAds APIs — incompatible with ads-mobile-sdk (GMA Next-Gen).
-    exclude group: 'com.applovin.mediation', module: 'google-adapter'
-    exclude group: 'com.applovin.mediation', module: 'google-ad-manager-adapter'
     resolutionStrategy {
         eachDependency { details ->
             if (details.requested.group == 'androidx.lifecycle') {
@@ -21,7 +15,7 @@ configurations.configureEach {
 }
 
 dependencies {
-    implementation 'com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.1.0'
+    implementation 'com.google.android.gms:play-services-ads:25.3.0'
     implementation 'com.google.android.ump:user-messaging-platform:4.0.0'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -46,11 +40,6 @@ dependencies {
     implementation 'com.appsflyer:purchase-connector:2.2.0' // Assets/AppsFlyer/Editor/AppsFlyerDependencies.xml:8
     implementation 'com.appsflyer:unity-wrapper:6.17.81' // Assets/AppsFlyer/Editor/AppsFlyerDependencies.xml:6
     implementation 'com.facebook.shimmer:shimmer:0.5.0' // Packages/com.abi.ads.unity/Editor/ABIAdsDependencies.xml:16
-    implementation 'com.google.ads.mediation:applovin:13.6.2.0' // Packages/com.abi.ads.unity/Editor/ABIAdsDependencies.xml:39
-    implementation 'com.google.ads.mediation:facebook:6.21.0.3' // Packages/com.abi.ads.unity/Editor/ABIAdsDependencies.xml:39
-    implementation 'com.google.ads.mediation:mintegral:17.1.61.0' // Packages/com.abi.ads.unity/Editor/ABIAdsDependencies.xml:39
-    implementation 'com.google.ads.mediation:pangle:8.0.0.5.0' // Packages/com.abi.ads.unity/Editor/ABIAdsDependencies.xml:39
-    implementation 'com.google.ads.mediation:vungle:7.7.4.0' // Packages/com.abi.ads.unity/Editor/ABIAdsDependencies.xml:39
     implementation 'com.google.android.gms:play-services-base:18.7.2' // Assets/Firebase/Editor/AppDependencies.xml:17
     implementation 'com.google.android.material:material:1.12.0' // Packages/com.abi.ads.unity/Editor/ABIAdsDependencies.xml:13
     implementation 'com.google.android.ump:user-messaging-platform:4.0.0' // Assets/MaxSdk/AppLovin/Editor/Dependencies.xml:5

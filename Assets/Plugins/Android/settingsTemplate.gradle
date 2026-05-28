@@ -16,6 +16,11 @@ dependencyResolutionManagement {
         **ARTIFACTORYREPOSITORY**
         google()
         mavenCentral()
+        // ABI Ads Mediation Repos Start
+        maven { url "https://artifact.bytedance.com/repository/pangle/" } // ABI Ads: Pangle
+        maven { url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" } // ABI Ads: Mintegral
+        // ABI Ads Mediation Repos End
+
 // Android Resolver Repos Start
         def unityProjectPath = $/file:///**DIR_UNITYPROJECT**/$.replace("\\", "/")
         maven {
@@ -23,11 +28,6 @@ dependencyResolutionManagement {
         }
         mavenLocal()
 // Android Resolver Repos End
-        // ABI Ads Mediation Repos Start
-        maven { url "https://artifact.bytedance.com/repository/pangle/" } // ABI Ads: Pangle
-        maven { url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" } // ABI Ads: Mintegral
-        // ABI Ads Mediation Repos End
-
         flatDir {
             dirs "${project(':unityLibrary').projectDir}/libs"
         }

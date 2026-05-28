@@ -5,7 +5,7 @@ Project Unity mẫu minh họa cách tích hợp **[ABI Ads Unity Bridge](https:
 | | |
 |---|---|
 | Demo repo | [ABI-Lib-Ads-Demo](https://github.com/hongphuong0211/ABI-Lib-Ads-Demo) |
-| Package ads | [ABI-Lib-Ads-Support](https://github.com/hongphuong0211/ABI-Lib-Ads-Support) v1.7.9 |
+| Package ads | [ABI-Lib-Ads-Support](https://github.com/hongphuong0211/ABI-Lib-Ads-Support) v1.7.11 |
 | Unity | 2022.3 LTS (project hiện tại: **2022.3.62f2**) |
 | Scene demo | `Assets/ABILibsSDK/Scenes/SceneDemo.unity` |
 | Script demo | `Assets/ABILibsSDK/Scripts/DemoController.cs` |
@@ -31,7 +31,7 @@ Project Unity mẫu minh họa cách tích hợp **[ABI Ads Unity Bridge](https:
 Mở `Packages/manifest.json`, thêm:
 
 ```json
-"com.abi.ads.unity": "https://github.com/hongphuong0211/ABI-Lib-Ads-Support.git#v1.7.9"
+"com.abi.ads.unity": "https://github.com/hongphuong0211/ABI-Lib-Ads-Support.git#v1.7.11"
 ```
 
 Project demo này đã khai báo sẵn entry trên. Sau khi Unity resolve, package nằm tại `Packages/com.abi.ads.unity/`.
@@ -78,9 +78,9 @@ Project demo dùng các placement mặc định:
    - Custom Gradle Properties Template
 2. **ABI Ads → Configs → Edit Global Config** → tick network AdMob/MAX → **Apply To XML**.
 3. **Assets → External Dependency Manager → Android Resolver → Force Resolve**.
-4. Kiểm tra `Assets/Plugins/Android/mainTemplate.gradle` vẫn có block **GMA Next-Gen** phía trên `// Android Resolver Dependencies Start`.
+4. Kiểm tra `Assets/Plugins/Android/mainTemplate.gradle` vẫn có block **GMA classic** (`play-services-ads:25.3.0`) phía trên `// Android Resolver Dependencies Start`.
 
-Chi tiết Unity 2022 + JDK 11: xem [android-build-unity-2022-jdk11.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.9/docs/android-build-unity-2022-jdk11.md) trong package.
+Chi tiết Unity 6 + JDK 17: xem [android-build-unity-6.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.11/docs/android-build-unity-6.md) trong package. Unity 2022 + JDK 11: [android-build-unity-2022-jdk11.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.11/docs/android-build-unity-2022-jdk11.md).
 
 Project demo có thêm `Assets/ABILibsSDK/Scripts/Editor/AndroidGradleDexFixPostProcessor.cs` — patch D8 pins cho launcher Gradle (JDK 11).
 
@@ -316,11 +316,11 @@ git clone https://github.com/hongphuong0211/ABI-Lib-Ads-Demo.git
 
 ## 8. Tài liệu package đầy đủ
 
-- README package: [ABI-Lib-Ads-Support README](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.9/README.md)
-- Native layout templates: [native-template-files.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.9/docs/native-template-files.md)
-- Android Unity 6: [android-build-notes.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.9/docs/android-build-notes.md)
-- Android Unity 2022 + JDK 11: [android-build-unity-2022-jdk11.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.9/docs/android-build-unity-2022-jdk11.md)
+- README package: [ABI-Lib-Ads-Support README](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.11/README.md)
+- Native layout templates: [native-template-files.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.11/docs/native-template-files.md)
+- Android Unity 6: [android-build-notes.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.11/docs/android-build-notes.md)
+- Android Unity 2022 + JDK 11: [android-build-unity-2022-jdk11.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.7.11/docs/android-build-unity-2022-jdk11.md)
 
 ---
 
-*Cập nhật: 2026-05-27 — demo `com.abi.ads.unity` v1.7.9; editor config load fix; native template doc.*
+*Cập nhật: 2026-05-28 — demo `com.abi.ads.unity` v1.7.11; GMA classic (`play-services-ads:25.3.0`).*

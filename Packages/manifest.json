@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.abi.ads.unity": "https://github.com/hongphuong0211/ABI-Lib-Ads-Support.git#v1.7.9",
+    "com.abi.ads.unity": "https://github.com/hongphuong0211/ABI-Lib-Ads-Support.git#v1.7.11",
     "com.unity.collab-proxy": "2.11.4",
     "com.unity.multiplayer.center": "1.0.1",
     "com.unity.timeline": "1.8.11",
