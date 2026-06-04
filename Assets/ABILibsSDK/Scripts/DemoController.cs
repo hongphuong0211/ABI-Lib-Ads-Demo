@@ -15,7 +15,9 @@ namespace ABILibsSDK
         [SerializeField] private string rewardedPlacement = "main_reward";
         [SerializeField] private string appOpenPlacement = "main_app_open";
         [SerializeField] private string nativePlacement = "main_native";
+        [SerializeField] private string nativeFullscreenPlacement = "main_native_fullscreen";
         [SerializeField] private InputField nativeTemplateName;
+        [SerializeField] private InputField nativeFullscreenTemplateName;
 
         [Header("UI References")]
         [SerializeField] private Button btnLoadBanner;
@@ -29,6 +31,8 @@ namespace ABILibsSDK
         [SerializeField] private Button btnShowAppOpen;
         [SerializeField] private Button btnLoadNative;
         [SerializeField] private Button btnShowNative;
+        [SerializeField] private Button btnLoadNativeFullscreen;
+        [SerializeField] private Button btnShowNativeFullscreen;
         [SerializeField] private Button btnFetchRemoteConfig;
         [SerializeField] private Button btnLogAppsFlyerEvent;
         [SerializeField] private Text txtStatus;
@@ -79,6 +83,10 @@ namespace ABILibsSDK
                 btnLoadNative.onClick.AddListener(OnLoadNative);
             if (btnShowNative != null)
                 btnShowNative.onClick.AddListener(OnShowNative);
+            if (btnLoadNativeFullscreen != null)
+                btnLoadNativeFullscreen.onClick.AddListener(OnLoadNativeFullscreen);
+            if (btnShowNativeFullscreen != null)
+                btnShowNativeFullscreen.onClick.AddListener(OnShowNativeFullscreen);
             if (btnFetchRemoteConfig != null)
                 btnFetchRemoteConfig.onClick.AddListener(OnFetchRemoteConfig);
             if (btnLogAppsFlyerEvent != null)
@@ -94,6 +102,7 @@ namespace ABILibsSDK
             RegisterPlacementCallbacks(rewardedPlacement);
             RegisterPlacementCallbacks(appOpenPlacement);
             RegisterPlacementCallbacks(nativePlacement);
+            RegisterPlacementCallbacks(nativeFullscreenPlacement);
         }
 
         private void RegisterPlacementCallbacks(string placement)
@@ -122,6 +131,7 @@ namespace ABILibsSDK
             ABIAds.UnregisterPlacement(rewardedPlacement);
             ABIAds.UnregisterPlacement(appOpenPlacement);
             ABIAds.UnregisterPlacement(nativePlacement);
+            ABIAds.UnregisterPlacement(nativeFullscreenPlacement);
         }
 
         private void OnSDKsReady()
@@ -206,6 +216,18 @@ namespace ABILibsSDK
                 NativeSize.Medium,
                 NativePosition.Bottom);
             Log($"Show native: {nativePlacement}");
+        }
+
+        private void OnLoadNativeFullscreen()
+        {
+            ABIAds.Load(nativeFullscreenPlacement);
+            Log($"Load native fullscreen: {nativeFullscreenPlacement}");
+        }
+
+        private void OnShowNativeFullscreen()
+        {
+            ABIAds.ShowNativeFullScreen(nativeFullscreenPlacement, 5, nativeFullscreenTemplateName == null || string.IsNullOrWhiteSpace(nativeFullscreenTemplateName.text) ? null : nativeFullscreenTemplateName.text);
+            Log($"Show native fullscreen: {nativeFullscreenPlacement}");
         }
 
         private void OnFetchRemoteConfig()

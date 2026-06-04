@@ -15,6 +15,7 @@
             "is_organic_show": true,
             "config_version": "",
             "prioritize_by_weight": true,
+            "ad_load_mode": 0,
             "disable_version": [],
             "activity_trigger_load": "",
             "activity_load_and_show": false,
@@ -52,7 +53,9 @@
                 "clicked": {
                     "btn_act_color": "",
                     "btn_act_text_color": "",
-                    "delay_time_show_btn_next": 0
+                    "delay_time_show_btn_next": 0,
+                    "close_btn_render_mode": 0,
+                    "dismiss_on_ad_click": false
                 }
             }
         },
@@ -71,6 +74,7 @@
             "is_organic_show": true,
             "config_version": "",
             "prioritize_by_weight": true,
+            "ad_load_mode": 0,
             "disable_version": [],
             "activity_trigger_load": "",
             "activity_load_and_show": false,
@@ -108,7 +112,9 @@
                 "clicked": {
                     "btn_act_color": "",
                     "btn_act_text_color": "",
-                    "delay_time_show_btn_next": 0
+                    "delay_time_show_btn_next": 0,
+                    "close_btn_render_mode": 0,
+                    "dismiss_on_ad_click": false
                 }
             }
         },
@@ -127,6 +133,7 @@
             "is_organic_show": true,
             "config_version": "",
             "prioritize_by_weight": true,
+            "ad_load_mode": 0,
             "disable_version": [],
             "activity_trigger_load": "",
             "activity_load_and_show": false,
@@ -164,7 +171,9 @@
                 "clicked": {
                     "btn_act_color": "",
                     "btn_act_text_color": "",
-                    "delay_time_show_btn_next": 0
+                    "delay_time_show_btn_next": 0,
+                    "close_btn_render_mode": 0,
+                    "dismiss_on_ad_click": false
                 }
             }
         },
@@ -183,6 +192,7 @@
             "is_organic_show": true,
             "config_version": "",
             "prioritize_by_weight": true,
+            "ad_load_mode": 0,
             "disable_version": [],
             "activity_trigger_load": "",
             "activity_load_and_show": false,
@@ -220,7 +230,9 @@
                 "clicked": {
                     "btn_act_color": "",
                     "btn_act_text_color": "",
-                    "delay_time_show_btn_next": 0
+                    "delay_time_show_btn_next": 0,
+                    "close_btn_render_mode": 0,
+                    "dismiss_on_ad_click": false
                 }
             }
         },
@@ -230,6 +242,11 @@
             "ad_ids": [
                 {
                     "ad_id": "ca-app-pub-3940256099942544/1044960115",
+                    "ads_weight": 100,
+                    "mediation": 0
+                },
+                {
+                    "ad_id": "ca-app-pub-3940256099942544/2247696110",
                     "ads_weight": 1,
                     "mediation": 0
                 }
@@ -239,6 +256,7 @@
             "is_organic_show": true,
             "config_version": "",
             "prioritize_by_weight": true,
+            "ad_load_mode": 0,
             "disable_version": [],
             "activity_trigger_load": "",
             "activity_load_and_show": false,
@@ -262,9 +280,9 @@
                 "reload_time": 0
             },
             "native_ad": {
-                "ad_layout_file": "",
-                "organic_layout": "",
-                "layout_meta": "",
+                "ad_layout_file": "ads_layout_native_fsn_cta_bottom_end",
+                "organic_layout": "ads_layout_native_fsn_cta_bottom_end",
+                "layout_meta": "ads_layout_native_fsn_cta_bottom_end",
                 "bg_color": "",
                 "border_color": "",
                 "corner_radius_dp": 0.0,
@@ -276,7 +294,73 @@
                 "clicked": {
                     "btn_act_color": "#08A8FF",
                     "btn_act_text_color": "",
-                    "delay_time_show_btn_next": 0
+                    "delay_time_show_btn_next": 0,
+                    "close_btn_render_mode": 3,
+                    "dismiss_on_ad_click": true
+                }
+            }
+        },
+        {
+            "ad_name": "main_native_fullscreen",
+            "ads_type": "native",
+            "ad_ids": [
+                {
+                    "ad_id": "ca-app-pub-3940256099942544/1044960115",
+                    "ads_weight": 100,
+                    "mediation": 0
+                },
+                {
+                    "ad_id": "ca-app-pub-3940256099942544/2247696110",
+                    "ads_weight": 1,
+                    "mediation": 0
+                }
+            ],
+            "backup_ad_ids": [],
+            "is_show": true,
+            "is_organic_show": true,
+            "config_version": "",
+            "prioritize_by_weight": true,
+            "ad_load_mode": 0,
+            "disable_version": [],
+            "activity_trigger_load": "",
+            "activity_load_and_show": false,
+            "delay_time_trigger_load": 0,
+            "activity_trigger_show": "",
+            "delay_time_trigger_show": 0,
+            "click_trigger_view_id": "",
+            "click_load_and_show": false,
+            "click_delay_ms": 0,
+            "click_trigger_show_view_id": "",
+            "click_trigger_show_delay_ms": 0,
+            "click_trigger_count_view_id": "",
+            "click_trigger_count_threshold": 0,
+            "click_trigger_count_delay_ms": 0,
+            "banner_ad": {
+                "inline_style": "",
+                "use_inline_adaptive": false,
+                "use_collapsible": false,
+                "collapsible_gravity": "",
+                "banner_size": "",
+                "reload_time": 0
+            },
+            "native_ad": {
+                "ad_layout_file": "ads_layout_native_fsn_cta_top",
+                "organic_layout": "ads_layout_native_fsn_cta_top",
+                "layout_meta": "ads_layout_native_fsn_cta_top",
+                "bg_color": "",
+                "border_color": "",
+                "corner_radius_dp": 0.0,
+                "stroke_width_dp": 1,
+                "headline_text_color": "#000000",
+                "body_text_color": "#000000",
+                "price_text_color": "#736F6F",
+                "advertiser_text_color": "#655555",
+                "clicked": {
+                    "btn_act_color": "#08A8FF",
+                    "btn_act_text_color": "",
+                    "delay_time_show_btn_next": 0,
+                    "close_btn_render_mode": 1,
+                    "dismiss_on_ad_click": true
                 }
             }
         }
