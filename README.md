@@ -6,7 +6,7 @@ Project Unity mẫu minh họa cách tích hợp **[ABI Ads Unity Bridge](https:
 |---|---|
 | Demo repo | [ABI-Lib-Ads-Demo](https://github.com/hongphuong0211/ABI-Lib-Ads-Demo) |
 | Package ads | [ABI-Lib-Ads-Support](https://github.com/hongphuong0211/ABI-Lib-Ads-Support) v1.8.0 |
-| Unity | 2022.3 LTS (project hiện tại: **2022.3.62f2**) |
+| Unity | **Unity 6** (6000.0+; project hiện tại: **6000.4.0f1**) |
 | Scene demo | `Assets/ABILibsSDK/Scenes/SceneDemo.unity` |
 | Script demo | `Assets/ABILibsSDK/Scripts/DemoController.cs` |
 
@@ -14,7 +14,7 @@ Project Unity mẫu minh họa cách tích hợp **[ABI Ads Unity Bridge](https:
 
 ## 1. Yêu cầu
 
-- **Unity 2022.3+** (khuyến nghị LTS; project này dùng 2022.3 + JDK 11 cho Android).
+- **Unity 6** (6000.0+) và **JDK 17** cho build Android. Unity 2022.3 **không** được hỗ trợ.
 - **External Dependency Manager (EDM4U)** — resolve Gradle dependency Android.
 - **Firebase Analytics** (tuỳ chọn) — Remote Config, forward revenue TROAS/Bamboo (package đã nhúng sẵn ABI-Custom-Event).
 - **AppsFlyer Unity SDK** (tuỳ chọn) — attribution trong demo.
@@ -80,9 +80,7 @@ Project demo dùng các placement mặc định:
 3. **Assets → External Dependency Manager → Android Resolver → Force Resolve**.
 4. Kiểm tra `Assets/Plugins/Android/mainTemplate.gradle` vẫn có block **GMA classic** (`play-services-ads:25.3.0`) phía trên `// Android Resolver Dependencies Start`.
 
-Chi tiết Unity 6 + JDK 17: xem [android-build-unity-6.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.8.0/docs/android-build-unity-6.md) trong package. Unity 2022 + JDK 11: [android-build-unity-2022-jdk11.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.8.0/docs/android-build-unity-2022-jdk11.md).
-
-Project demo có thêm `Assets/ABILibsSDK/Scripts/Editor/AndroidGradleDexFixPostProcessor.cs` — patch D8 pins cho launcher Gradle (JDK 11).
+Chi tiết build Android (Unity 6 + JDK 17): xem [android-build-unity-6.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.8.0/docs/android-build-unity-6.md) và [android-build-notes.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.8.0/docs/android-build-notes.md) trong package.
 
 ### Bước 3 — Android Application class
 
@@ -285,9 +283,7 @@ Assets/
 │       ├── DemoController.cs       # Demo ABI Ads API
 │       ├── SDKInitializer.cs       # Firebase / AppsFlyer / MAX (legacy wrapper)
 │       ├── FirebaseManager.cs
-│       ├── AppsFlyerManager.cs
-│       └── Editor/
-│           └── AndroidGradleDexFixPostProcessor.cs
+│       └── AppsFlyerManager.cs
 ├── Resources/Configs/
 │   ├── global_config.json
 │   └── placements.json
@@ -306,7 +302,7 @@ Packages/
 git clone https://github.com/hongphuong0211/ABI-Lib-Ads-Demo.git
 ```
 
-1. Mở project bằng **Unity 2022.3 LTS**.
+1. Mở project bằng **Unity 6** (6000.0+).
 2. Đợi Unity import package `com.abi.ads.unity` từ git.
 3. Chạy **Android Resolver → Force Resolve** (lần đầu).
 4. Mở `SceneDemo`, Play Mode — test từng nút ads trên UI.
@@ -318,9 +314,9 @@ git clone https://github.com/hongphuong0211/ABI-Lib-Ads-Demo.git
 
 - README package: [ABI-Lib-Ads-Support README](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.8.0/README.md)
 - Native layout templates: [native-template-files.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.8.0/docs/native-template-files.md)
-- Android Unity 6: [android-build-notes.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.8.0/docs/android-build-notes.md)
-- Android Unity 2022 + JDK 11: [android-build-unity-2022-jdk11.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.8.0/docs/android-build-unity-2022-jdk11.md)
+- Android Unity 6: [android-build-unity-6.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.8.0/docs/android-build-unity-6.md)
+- Android build notes: [android-build-notes.md](https://github.com/hongphuong0211/ABI-Lib-Ads-Support/blob/v1.8.0/docs/android-build-notes.md)
 
 ---
 
-*Cập nhật: 2026-06-04 — demo `com.abi.ads.unity` v1.8.0 (Git URL); GMA classic (`play-services-ads:25.3.0`).*
+*Cập nhật: 2026-06-04 — demo `com.abi.ads.unity` v1.8.0 (Git URL); Unity 6 + JDK 17; GMA classic (`play-services-ads:25.3.0`).*
